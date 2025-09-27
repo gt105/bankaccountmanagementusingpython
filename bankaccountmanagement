@@ -1,0 +1,58 @@
+accounts = []
+
+def create_account():
+    name = input("Enter account holder name: ")
+    balance = float(input("Enter initial deposit: "))
+    accounts.append({"name": name, "balance": balance})
+    print(f"Account created for {name} with balance {balance}")
+
+def deposit():
+    view_accounts()
+    index = int(input("Enter account number to deposit: "))
+    if 1 <= index <= len(accounts):
+        amount = float(input("Enter amount to deposit: "))
+        accounts[index-1]['balance'] += amount
+        print(f"Deposited {amount}. New balance: {accounts[index-1]['balance']}")
+    else:
+        print("Invalid account number!")
+
+def withdraw():
+    view_accounts()
+    index = int(input("Enter account number to withdraw: "))
+    if 1 <= index <= len(accounts):
+        amount = float(input("Enter amount to withdraw: "))
+        if accounts[index-1]['balance'] >= amount:
+            accounts[index-1]['balance'] -= amount
+            print(f"Withdrawn {amount}. New balance: {accounts[index-1]['balance']}")
+        else:
+            print("Insufficient balance!")
+    else:
+        print("Invalid account number!")
+
+def view_accounts():
+    if not accounts:
+        print("No accounts available!")
+        return
+    print("\nAccounts:")
+    for i, acc in enumerate(accounts, 1):
+        print(f"{i}. {acc['name']} - Balance: {acc['balance']}")
+
+def main():
+    while True:
+        print("\n1. Create Account\n2. Deposit\n3. Withdraw\n4. View Accounts\n5. Exit")
+        choice = input("Enter choice: ")
+        if choice == "1":
+            create_account()
+        elif choice == "2":
+            deposit()
+        elif choice == "3":
+            withdraw()
+        elif choice == "4":
+            view_accounts()
+        elif choice == "5":
+            break
+        else:
+            print("Invalid choice!")
+
+if __name__ == "__main__":
+    main()
