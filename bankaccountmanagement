@@ -4,17 +4,29 @@ from typing import List, Dict
 
 ACCOUNTS_FILE = "accounts.json"
 
+# Load accounts from file at startup
+def load_accounts() -> List[Dict[str, float]]:
+=======
+
+ACCOUNTS_FILE = "accounts.json"
+
 def load_accounts() -> List[Dict[str, float]]:
     """Load accounts from JSON file."""
+
     try:
         with open(ACCOUNTS_FILE, "r") as f:
             return json.load(f)
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
+
+# Save accounts to file
+def save_accounts(accounts: List[Dict[str, float]]) -> None:
+=======
 def save_accounts(accounts: List[Dict[str, float]]) -> None:
     """Save accounts to JSON file."""
-    with open(ACCOUNTS_FILE, "w") as f:
+
+with open(ACCOUNTS_FILE, "w") as f:
         json.dump(accounts, f, indent=4)
 
 accounts: List[Dict[str, float]] = load_accounts()
@@ -39,6 +51,11 @@ def create_account() -> None:
     accounts.append({"name": name, "balance": balance})
     save_accounts(accounts)
     print(f"Account created for {name} with balance {balance:.2f}\n")
+
+
+def deposit() -> None:
+    """Deposit money into an existing account."""
+=======
 
 =======
 from datetime import datetime
@@ -131,13 +148,20 @@ def deposit() -> None:
 
 def withdraw() -> None:
     """Withdraw money from an existing account."""
+
     if not accounts:
         print("No accounts available!\n")
         return
     view_accounts()
 
+    
+    try:
+        index = int(input("Enter account number to deposit: ").strip()) - 1
+=======
+
     try:
         index = int(input("Enter account number to withdraw: ").strip()) - 1
+
 
         if not (0 <= index < len(accounts)):
             print("Invalid account number!\n")
@@ -145,6 +169,24 @@ def withdraw() -> None:
     except ValueError:
         print("Invalid input! Please enter a number.\n")
         return
+
+
+    try:
+        amount = float(input("Enter amount to deposit: ").strip())
+        if amount <= 0:
+            print("Deposit amount must be greater than zero!\n")
+            return
+    except ValueError:
+        print("Invalid input! Please enter a numeric value.\n")
+        return
+
+    accounts[index]['balance'] += amount
+    save_accounts(accounts)
+    print(f"Deposited {amount:.2f}. New balance: {accounts[index]['balance']:.2f}\n")
+
+def withdraw() -> None:
+    """Withdraw money from an existing account."""
+=======
 
     try:
 
@@ -195,6 +237,7 @@ def view_accounts() -> None:
 def view_transactions() -> None:
     """View transaction history of a selected account."""
 
+
     if not accounts:
         print("No accounts available!\n")
         return
@@ -204,7 +247,11 @@ def view_transactions() -> None:
 
         index = int(input("Enter account number to withdraw: ").strip()) - 1
 =======
+
+        index = int(input("Enter account number to withdraw: ").strip()) - 1
+=======
         index = int(input("Enter account number to view transactions: ").strip()) - 1
+
 
         if not (0 <= index < len(accounts)):
             print("Invalid account number!\n")
@@ -212,6 +259,9 @@ def view_transactions() -> None:
     except ValueError:
         print("Invalid input! Please enter a number.\n")
         return
+
+
+=======
 
 
     try:
@@ -240,6 +290,8 @@ def view_accounts() -> None:
         print(f"{i}. {acc['name']} - Balance: {acc['balance']:.2f}")
     print()
 
+
+=======
 def search_account() -> None:
     """Search accounts by account holder name."""
     if not accounts:
@@ -306,6 +358,7 @@ def delete_account() -> None:
     save_accounts(accounts)
     print(f"Account of {removed['name']} deleted successfully!\n")
 
+
 def main() -> None:
     """Main menu loop for account management."""
     menu_options = {
@@ -313,6 +366,9 @@ def main() -> None:
         "2": deposit,
         "3": withdraw,
         "4": view_accounts,
+
+        "5": lambda: print("Exiting program. Goodbye!")
+=======
 
         "5": search_account,
         "6": delete_account,
@@ -323,6 +379,7 @@ def main() -> None:
         "7": delete_account,
         "8": lambda: print("Exiting program. Goodbye!")
 
+
     }
 
     while True:
@@ -331,6 +388,9 @@ def main() -> None:
         print("2. Deposit")
         print("3. Withdraw")
         print("4. View Accounts")
+
+        print("5. Exit")
+=======
 
         print("5. Search Account")
         print("6. Delete Account")
@@ -341,15 +401,20 @@ def main() -> None:
         print("7. Delete Account")
         print("8. Exit")
 
+
         choice = input("Enter your choice: ").strip()
 
         action = menu_options.get(choice)
         if action:
             action()
 
+            if choice == "5":
+=======
+
             if choice == "7":
 =======
             if choice == "8":
+
 
                 break
         else:
